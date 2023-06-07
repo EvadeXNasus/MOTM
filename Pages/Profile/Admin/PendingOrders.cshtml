@@ -1,0 +1,188 @@
+﻿@page
+@model MOTM.Pages.Profile.Admin.PendingOrdersModel
+@{
+    ViewData["Title"] = "View Pending Orders";
+}
+
+<h1>Pending Orders</h1>
+
+<a asp-page="AllOrders">View All Orders</a>
+
+<form method="POST">
+    <table>
+        <caption>Today's Orders</caption>
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Services</th>
+                <th>Time Slot</th>
+                <th>Order Placed</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var Order in Model.TodaysOrders)
+            {
+                <tr>
+                        @foreach(var Customer in Model.Customers)
+                        {
+                            if (Order.CustomerID == Customer.Id)
+                            {
+                                <td>
+                                    <ul>
+                                        <li>@Customer.FirstAddressLine</li>
+                                            @if (Customer.SecondAddressLine != null)
+                                            {
+                                                <li>@Customer.SecondAddressLine</li>
+                                            }
+                                            @if (Customer.ThirdAddressLine != null)
+                                            {
+                                                <li>@Customer.ThirdAddressLine</li>
+                                            }
+                                        <li>@Customer.PostTown</li>
+                                        <li>@Customer.PostCode</li>
+                                    </ul>
+                                </td>
+                                <td>@(Customer.FirstName + " " + Customer.LastName)</td>
+                                <td>@Customer.PhoneNumber</td>
+                                <td>
+                                    <ul>
+                                        @foreach(var Service in Model.Services)
+                                        {
+                                            if (Order.Services % Service.ID == 0 )
+                                            {
+                                                <li>@Service.Name</li>
+                                            }
+                                        }
+                                    </ul>
+                                </td>
+                                <td>@Order.TimeSlot.ToString("yyyy-MM-dd hh:mm")</td>
+                                <td>@Order.OrderedTime.ToString("yyyy-MM-dd hh:mm")</td>
+                                <td><button type="submit" asp-page-handler="Complete" asp-route-CustomerID="@Order.CustomerID" asp-route-TimeSlot="@Order.TimeSlot.ToString()">Mark as Complete</button></td>
+                            }
+                        }
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <table>
+        <caption>Overdue Orders</caption>
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Services</th>
+                <th>Time Slot</th>
+                <th>Order Placed</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var Order in Model.OverdueOrders)
+            {
+                <tr>
+                        @foreach(var Customer in Model.Customers)
+                        {
+                            if (Order.CustomerID == Customer.Id)
+                            {
+                                <td>
+                                    <ul>
+                                        <li>@Customer.FirstAddressLine</li>
+                                            @if (Customer.SecondAddressLine != null)
+                                            {
+                                                <li>@Customer.SecondAddressLine</li>
+                                            }
+                                            @if (Customer.ThirdAddressLine != null)
+                                            {
+                                                <li>@Customer.ThirdAddressLine</li>
+                                            }
+                                        <li>@Customer.PostTown</li>
+                                        <li>@Customer.PostCode</li>
+                                    </ul>
+                                </td>
+                                <td>@(Customer.FirstName + " " + Customer.LastName)</td>
+                                <td>@Customer.PhoneNumber</td>
+                                <td>
+                                    <ul>
+                                        @foreach(var Service in Model.Services)
+                                        {
+                                            if (Order.Services % Service.ID == 0 )
+                                            {
+                                                <li>@Service.Name</li>
+                                            }
+                                        }
+                                    </ul>
+                                </td>
+                                <td>@Order.TimeSlot.ToString("yyyy-MM-dd hh:mm")</td>
+                                <td>@Order.OrderedTime.ToString("yyyy-MM-dd hh:mm")</td>
+                                <td><button type="submit" asp-page-handler="Complete" asp-route-CustomerID="@Order.CustomerID" asp-route-TimeSlot="@Order.TimeSlot.ToString()">Mark as Complete</button></td>
+                            }
+                        }
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <table>
+        <caption>Upcoming Orders</caption>
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Services</th>
+                <th>Time Slot</th>
+                <th>Order Placed</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Order in Model.UpcomingOrders)
+            {
+                <tr>
+                    @foreach (var Customer in Model.Customers)
+                    {
+                        if (Order.CustomerID == Customer.Id)
+                        {
+                            <td>
+                                <ul>
+                                    <li>@Customer.FirstAddressLine</li>
+                                    @if (Customer.SecondAddressLine != null)
+                                    {
+                                        <li>@Customer.SecondAddressLine</li>
+                                    }
+                                    @if (Customer.ThirdAddressLine != null)
+                                    {
+                                        <li>@Customer.ThirdAddressLine</li>
+                                    }
+                                    <li>@Customer.PostTown</li>
+                                    <li>@Customer.PostCode</li>
+                                </ul>
+                            </td>
+                            <td>@(Customer.FirstName + " " + Customer.LastName)</td>
+                            <td>@Customer.PhoneNumber</td>
+                            <td>
+                                <ul>
+                                    @foreach (var Service in Model.Services)
+                                    {
+                                        if (Order.Services % Service.ID == 0)
+                                        {
+                                            <li>@Service.Name</li>
+                                        }
+                                    }
+                                </ul>
+                            </td>
+                            <td>@Order.TimeSlot.ToString("yyyy-MM-dd hh:mm")</td>
+                            <td>@Order.OrderedTime.ToString("yyyy-MM-dd hh:mm")</td>
+                            <td><button type="submit" asp-page-handler="Complete" asp-route-CustomerID="@Order.CustomerID" asp-route-TimeSlot="@Order.TimeSlot.ToString()">Mark as Complete</button></td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>

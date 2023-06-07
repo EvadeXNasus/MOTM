@@ -1,0 +1,62 @@
+﻿@page
+@model MOTM.Pages.OrderHistoryModel
+@{
+    ViewData["Title"] = "Your Order History";
+}
+
+<h1>Order History</h1>
+
+<form method="POST">
+    <fieldset>
+        <legend>Search by Scheduled Month of Visit:</legend>
+        <input type="month" asp-for="SearchMonth" />
+        <button type="submit" asp-page-handler="Search">Search</button>
+    </fieldset>
+</form>
+
+@if (Model._Searched)
+{
+    <a asp-page="OrderHistory" asp-page-Searched="false">View all Results</a>
+}
+
+<table>
+    <caption>Orders you've placed</caption>
+    <thead>
+        <tr>
+            <th>Price</th>
+            <th>Time Slot</th>
+            <th>Order Placed</th>
+            <th>Fulfilled</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Order in Model.Orders)
+        {
+            <tr>
+                <td>
+                    @foreach (var service in Model.Services)
+                    {
+                        if (Order.Services % service.ID == 0)
+                        {
+                            Model.Cost += service.Price;
+                        }
+                    }
+                    @Model.Cost.ToString("C")
+                    @{
+                        Model.Cost = 0;
+                    }
+                </td>
+                <td>@Order.TimeSlot.ToString("yyyy-MM-dd hh:mm")</td>
+                <td>@Order.OrderedTime.ToString("yyyy-MM-dd hh:mm")</td>
+                @if (Order.Fulfilled)
+                {
+                    <td>Yes</td>
+                }
+                else
+                {
+                    <td>No</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

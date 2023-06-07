@@ -1,0 +1,20 @@
+﻿@page "{choices:long}"
+@model MOTM.Pages.CheckoutModel
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h1>Total Payable: @Model.Cost.ToString("C")</h1>
+<form method="POST">
+    <fieldset>
+        <legend>Choose the date & time within a month and no earlier than a week:</legend>
+        <label asp-for="Input">
+            <input type="datetime-local"
+                   value="@(DateTime.Now.AddDays(7).ToString("yyyy-MM-ddThh:mm"))"
+                   min="@(DateTime.Now.AddDays(7).ToString("yyyy-MM-ddThh:mm"))"
+                   max="@(DateTime.Now.AddMonths(1).ToString("yyyy-MM-ddThh:mm"))"
+                   asp-for="Input" />
+        </label>
+        <button type="submit">Submit Payment Details</button>
+    </fieldset>
+</form>

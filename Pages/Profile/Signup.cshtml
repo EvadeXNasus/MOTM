@@ -1,0 +1,73 @@
+﻿@page
+@model MOTM.Pages.SignupModel
+@{
+    ViewData["Title"] = "Sign Up";
+}
+
+<h1>Create an account</h1>
+
+<form method="POST">
+    <div asp-validation-summary="All"></div>
+    <fieldset>
+        <legend>Your Login Details</legend>
+        <samp asp-validation-for="Input.EMail"></samp>
+        <label asp-for="Input.EMail">
+            Enter an E-Mail Address*
+            <input asp-for="Input.EMail" maxlength="30" required />
+        </label>
+        <samp asp-validation-for="Input.Password"></samp>
+        <label asp-for="Input.Password">
+            Enter a Password*
+            <input asp-for="Input.Password" maxlength="50" required />
+        </label>
+        <samp asp-validation-for="Input.ConfirmPassword"></samp>
+        <label asp-for="Input.ConfirmPassword">
+            Confirm your Password*
+            <input asp-for="Input.ConfirmPassword" maxlength="50" required />
+        </label>
+    </fieldset>
+    <fieldset>
+        <legend>Your Contact Details</legend>
+        <samp asp-validation-for="Input.FirstName"></samp>
+        <label asp-for="Input.FirstName">
+            Enter your first name*
+            <input asp-for="Input.FirstName" maxlength="30" required />
+        </label>
+        <samp asp-validation-for="Input.LastName"></samp>
+        <label asp-for="Input.LastName">
+            Enter your last name*
+            <input asp-for="Input.LastName" maxlength="30" required />
+        </label>
+        <samp asp-validation-for="Input.PhoneNumber"></samp>
+        <label asp-for="Input.PhoneNumber">
+            Enter your phone number*
+            <input asp-for="Input.PhoneNumber" maxlength="15" required />
+        </label>
+        <samp asp-validation-for="Input.FirstAddressLine"></samp>
+        <label asp-for="Input.FirstAddressLine">
+            Enter your first line of address*
+            <input asp-for="Input.FirstAddressLine" maxlength="30" required />
+        </label>
+        <samp asp-validation-for="Input.SecondAddressLine"></samp>
+        <label asp-for="Input.SecondAddressLine">
+            Enter your second line of address, if applicable
+            <input asp-for="Input.SecondAddressLine" maxlength="30" />
+        </label>
+        <samp asp-validation-for="Input.ThirdAddressLine"></samp>
+        <label asp-for="Input.ThirdAddressLine">
+            Enter your third line of address, if applicable
+            <input asp-for="Input.ThirdAddressLine" maxlength="30" />
+        </label>
+        <samp asp-validation-for="Input.PostTown"></samp>
+        <label asp-for="Input.PostTown">
+            Enter your Postal Town*
+            <input asp-for="Input.PostTown" maxlength="30" required />
+        </label>
+        <samp asp-validation-for="Input.PostCode"></samp>
+        <label asp-for="Input.PostCode">
+            Enter your Postcode*
+            <input asp-for="Input.PostCode" maxlength="8" required />
+        </label>
+    </fieldset>
+    <button type="submit">Sign Up</button>
+</form>

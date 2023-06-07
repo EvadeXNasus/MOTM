@@ -1,0 +1,54 @@
+﻿@page
+@model MOTM.Pages.ContactDetailsModel
+@{
+    ViewData["Title"] = "Contact Details";
+}
+
+<h1>Contact Details</h1>
+
+<form method="POST">
+    <fieldset>
+        <legend>Details you can't change:</legend>
+        <input type="hidden" asp-for="Customer.Id" value="@Model.Customer.Id">
+        <label>
+            Your E-Mail:
+            <input type="email" asp-for="Customer.EMail" value="@Model.Customer.EMail" readonly />
+        </label>
+        <label>
+            Your First Name:
+            <input asp-for="Customer.FirstName" value="@Model.Customer.FirstName" readonly />
+        </label>
+        <label>
+            Your Last Name:
+            <input asp-for="Customer.LastName" value="@Model.Customer.LastName" readonly />
+        </label>
+    </fieldset>
+    <fieldset>
+        <legend>Update Your Contact Details:</legend>
+        <label>
+            Your Phone Number:
+            <input type="tel" asp-for="Customer.PhoneNumber" value="@Model.Customer.PhoneNumber" maxlength="15" required />
+        </label>
+        <label>
+            Your First Line of Address:
+            <input asp-for="Customer.FirstAddressLine" value="@Model.Customer.FirstAddressLine" maxlength="30" required />
+        </label>
+        <label>
+            Your Second Line of Address:
+            <input asp-for="Customer.SecondAddressLine" value="@Model.Customer.SecondAddressLine" maxlength="30" />
+        </label>
+        <label>
+            Your Third Line of Address:
+            <input asp-for="Customer.ThirdAddressLine" value="@Model.Customer.ThirdAddressLine" maxlength="30" />
+        </label>
+        <label>
+            Your Postal Town:
+            <input asp-for="Customer.PostTown" value="@Model.Customer.PostTown" maxlength="30" required />
+        </label>
+        <label>
+            Your Post Code:
+            <input asp-for="Customer.PostCode" value="@Model.Customer.PostCode" maxlength="8" required />
+        </label>
+    </fieldset>
+    <button type="submit">Save Changes</button>
+</form>

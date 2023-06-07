@@ -1,0 +1,14 @@
+﻿@page
+@model MOTM.Pages.LogoutConfirmationModel
+@{
+    ViewData["Title"] = "Confirm Logout";
+}
+
+<h1>Are you sure you want to log out?</h1>
+
+<nav>
+    <a asp-page="/Index">No</a>
+    <form method="POST">
+        <button type="submit">Yes</button>
+    </form>
+</nav>

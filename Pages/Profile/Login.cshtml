@@ -1,0 +1,25 @@
+﻿@page
+@model MOTM.Pages.LoginModel
+@{
+    ViewData["Title"] = "Log In";
+}
+
+<h1>Log In</h1>
+
+<form method="POST">
+    <div asp-validation-summary="All"></div>
+    <fieldset>
+        <legend>Your Login Credentials:</legend>
+        <samp asp-validation-for="Input.EMail"></samp>
+        <label asp-for="Input.EMail">
+            Enter your Username:
+            <input asp-for="Input.EMail" maxlength="30" required />
+        </label>
+        <samp asp-validation-for="Input.Password"></samp>
+        <label asp-for="Input.Password">
+            Enter your Password:
+            <input asp-for="Input.Password" maxlength="50" required />
+        </label>
+        <button type="submit">Log In</button>
+    </fieldset>
+</form>

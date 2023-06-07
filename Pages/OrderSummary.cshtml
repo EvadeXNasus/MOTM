@@ -1,0 +1,21 @@
+﻿@page "{sum:long}"
+@model MOTM.Pages.OrderSummaryModel
+@{
+    ViewData["Title"] = "Order Summary";
+}
+
+<h1>You have made the following selections:</h1>
+<ul>
+    @foreach (var service in Model.Services)
+    {
+        if (Model.Choices % service.ID == 0)
+        {
+            <li>@service.Name</li>
+        }
+    }
+</ul>
+<h1>Do you wish to continue with the transaction and pay £@(Model.Cost)?</h1>
+<nav>
+    <a asp-page="Catalogue" asp-route-empty="false">No</a>
+    <a asp-page="Checkout" asp-route-choices="@Model.Choices">Yes</a>
+</nav>

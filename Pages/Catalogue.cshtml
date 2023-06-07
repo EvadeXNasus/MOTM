@@ -1,0 +1,43 @@
+﻿@page "{empty:bool}"
+@model MOTM.Pages.CatalogueModel
+@{
+    ViewData["Title"] = "Catalogue";
+}
+
+@if (@Model._empty)
+    {
+        <samp>Please select at least one option.</samp><br />
+    }
+<table>
+    <caption>Services & Pricing</caption>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Duration</th>
+            <th>Price</th>
+            <th>Selected</th>
+        </tr>
+    </thead>
+    <form method="POST">
+        <tbody>
+            @foreach (var Ser in Model.Services) {
+                <tr>
+                    <td>@Ser.Name</td>
+                    <td>@Ser.Description</td>
+                    <td>@Ser.Duration min</td>
+                    <td>@Ser.Price.ToString("C")</td>
+                    <td><input type="checkbox" asp-for="Selected[Model.i]"/></td>
+                </tr>
+                Model.i++;
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">
+                    <button type="submit" asp-route-sum="@Model.sum">Place Order</button>
+                </td>
+            </tr>
+        </tfoot>
+    </form>
+</table>
