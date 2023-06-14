@@ -7,7 +7,7 @@ using MOTM.Models;
 
 namespace MOTM.Pages
 {
-    [Authorize(Roles = "Customer,Admin")]
+    [Authorize]
     public class ProfileOverviewModel : PageModel
     {
         private MOTMContext _db;
