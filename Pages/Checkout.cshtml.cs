@@ -16,7 +16,11 @@ namespace MOTM.Pages
         [BindProperty]
         public long Choices { get; set; }
         [BindProperty]
-        public DateTime Input { get; set; } = DateTime.Now;
+        public string InputDate { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
+        [BindProperty]
+        public string InputHour { get; set; } = "00";
+        [BindProperty]
+        public string InputMinute { get; set; } = "00";
         public short Cost { get; set; }
         public CheckoutModel(MOTMContext db, UserManager<AppUser> um)
         {
@@ -42,7 +46,7 @@ namespace MOTM.Pages
             {
                 CustomerID = await _userManager.GetUserIdAsync(await _userManager.GetUserAsync(User)),
                 Services = Choices,
-                TimeSlot = Input,
+                TimeSlot = DateTime.Parse(InputDate + "T" + InputHour + ":" + InputMinute),
                 OrderedTime = DateTime.Now,
                 Fulfilled = false
             };
