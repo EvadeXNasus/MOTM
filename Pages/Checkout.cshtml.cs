@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MOTM.Models;
+using System.Collections;
 
 namespace MOTM.Pages
 {
@@ -15,6 +16,10 @@ namespace MOTM.Pages
         public IList<Service> Services { get; set; }
         [BindProperty]
         public long Choices { get; set; }
+        /*[BindProperty]*/
+        public IList<BookedSlot> BookedDays { get; set; }
+        /*[BindProperty]*/
+        public IList<DateTime> BookableDays { get; set; } = new List<DateTime>();
         [BindProperty]
         public string InputDate { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
         [BindProperty]
@@ -30,12 +35,23 @@ namespace MOTM.Pages
         public void OnGet(long choices)
         {
             Choices = choices;
-            Services = _db.Services.FromSqlRaw("SELECT * FROM Services").ToList();
+            Services = _db.Services.FromSql($"SELECT * FROM Services").ToList();
+            BookedDays = _db.BookedSlots.FromSql(
+                $@"SELECT TimeSlot FROM Orders WHERE TimeSlot > {DateTime.Now.AddDays(6).ToString("yyyy-MM-dd")}
+                AND TimeSlot < {DateTime.Today.AddDays(29).ToString("yyyy-MM-dd")}"
+                ).ToList();
             foreach (var Service in Services)
             {
                 if (Choices % Service.ID == 0)
                 {
                     Cost += Service.Price;
+                }
+            }
+            for (byte i = 0 ; i < 21 ; i++)
+            {
+                if (!BookedDays.Any(BookedDate => BookedDate.BookedDay == DateTime.Today.AddDays(i + 7)))
+                {
+                BookableDays.Add(DateTime.Today.AddDays(i + 7));
                 }
             }
         }

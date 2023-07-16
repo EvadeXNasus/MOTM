@@ -7,29 +7,19 @@
 <h1>Total Payable: @Model.Cost.ToString("C")</h1>
 <form method="POST">
     <fieldset>
-        <legend>Choose the date & time within a month and no earlier than a week:</legend>
+        <legend>Choose the date & time within four weeks and no earlier than one week:</legend>
         <label asp-for="InputDate">
             Select a Date:
-            <input type="date"
-                   value="@(DateTime.Now.AddDays(7).ToString("yyyy-MM-dd"))"
-                   min="@(DateTime.Now.AddDays(7).ToString("yyyy-MM-dd"))"
-                   max="@(DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd"))"
-                   asp-for="InputDate"
-            />
+            <select asp-for="InputDate">
+                @foreach (DateTime BookableDay in Model.BookableDays)
+                {
+                    <option value="@BookableDay.ToString("yyyy-MM-dd")">@BookableDay.ToString("dd-MM-yyyy")</option>
+                }
+            </select>
         </label>
         <label asp-for="InputHour">
             Select an Hour:
             <select asp-for="InputHour" required>
-                <option value="00">00</option>
-                <option value="01">01</option>
-                <option value="02">02</option>
-                <option value="03">03</option>
-                <option value="04">04</option>
-                <option value="05">05</option>
-                <option value="06">06</option>
-                <option value="07">07</option>
-                <option value="08">08</option>
-                <option value="09">09</option>
                 <option value="10">10</option>
                 <option value="11">11</option>
                 <option value="12">12</option>
@@ -41,9 +31,6 @@
                 <option value="18">18</option>
                 <option value="19">19</option>
                 <option value="20">20</option>
-                <option value="21">21</option>
-                <option value="22">22</option>
-                <option value="23">23</option>
             </select>
         </label>
         <label asp-for="InputMinute">
