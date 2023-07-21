@@ -8,38 +8,25 @@
 <form method="POST">
     <fieldset>
         <legend>Choose the date & time within four weeks and no earlier than one week:</legend>
-        <label asp-for="InputDate">
+        <label asp-for="Input">
             Select a Date:
-            <select asp-for="InputDate">
-                @foreach (DateTime BookableDay in Model.BookableDays)
+            <select asp-for="Input">
+                @for (byte i = 0 ; i < 21 ; i++)
                 {
-                    <option value="@BookableDay.ToString("yyyy-MM-dd")">@BookableDay.ToString("dd-MM-yyyy")</option>
+                    <optgroup label="@Model.BookingSlotsInRange[i,0].ToString("dd-MM-yyyy")">
+                        @for (byte j = 0 ; j < 5 ; j++)
+                        {
+                            if (!Model.OrdersInBookableRange.Any(Order => Order.TimeSlot == Model.BookingSlotsInRange[i,j]))
+                            {
+                                <option value="@Model.BookingSlotsInRange[i,j].ToString("yyyy-MM-ddTHH:mm")">@Model.BookingSlotsInRange[i,j].ToString("dd-MM-yyyy HH:mm")</option>
+                            }
+                            else
+                            {
+                                <option disabled="disabled">@Model.BookingSlotsInRange[i,j].ToString("dd-MM-yyyy HH:mm")</option>
+                            }
+                        }
+                    </optgroup>
                 }
-            </select>
-        </label>
-        <label asp-for="InputHour">
-            Select an Hour:
-            <select asp-for="InputHour" required>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-            </select>
-        </label>
-        <label asp-for="InputMinute">
-            Select a Minute
-            <select asp-for="InputMinute" required>
-                <option value="00">00</option>
-                <option value="15">15</option>
-                <option value="30">30</option>
-                <option value="45">45</option>
             </select>
         </label>
         <button type="submit">Submit Payment Details</button>

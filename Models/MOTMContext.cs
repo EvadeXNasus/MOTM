@@ -15,8 +15,6 @@ namespace MOTM.Models
         public DbSet<Order> Orders { get; set; }
         [NotMapped]
         public DbSet<CustomerOrder> CustomersOrders { get; set; }
-        [NotMapped]
-        public DbSet<BookedSlot> BookedSlots { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -26,7 +24,6 @@ namespace MOTM.Models
             builder.Entity<Order>().ToTable("Orders");
             builder.Entity<CustomerOrder>().HasKey(t => new { t.CustomerId, t.TimeSlot});
             builder.Entity<CustomerOrder>().ToTable(t => t.ExcludeFromMigrations());
-            builder.Entity<BookedSlot>().ToTable(t => t.ExcludeFromMigrations());
         }
     }
 }
