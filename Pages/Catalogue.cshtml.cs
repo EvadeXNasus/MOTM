@@ -24,11 +24,13 @@ namespace MOTM.Pages
             _db = db;
             _signInManager = sm;
         }
+
         public void OnGet(bool empty)
         {
             Services = _db.Services.FromSqlRaw("SELECT * FROM Services").ToList();
             _empty = empty;
         }
+
         public IActionResult OnPost(long sum)
         {
             if (!_signInManager.IsSignedIn(User))

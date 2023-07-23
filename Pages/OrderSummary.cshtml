@@ -14,8 +14,38 @@
         }
     }
 </ul>
-<h1>Do you wish to continue with the transaction and pay £@(Model.Cost)?</h1>
-<nav>
-    <a asp-page="Catalogue" asp-route-empty="false">No</a>
-    <a asp-page="Checkout" asp-route-choices="@Model.Choices">Yes</a>
-</nav>
+<form method="POST">
+    <fieldset>
+        <legend>Choose the date & time within four weeks and no earlier than one week:</legend>
+        <label asp-for="Input">
+            Select a Date:
+            <select asp-for="Input">
+                @for (byte i = 0; i < 21; i++)
+                {
+                    <optgroup label="@Model.BookingSlotsInRange[i,0].ToString("dd-MM-yyyy")">
+                        @for (byte j = 0; j < 5; j++)
+                        {
+                            if (!Model.OrdersInBookableRange.Any(Order => Order.TimeSlot == Model.BookingSlotsInRange[i, j]))
+                            {
+                                <option value="@Model.BookingSlotsInRange[i,j].ToString("yyyy-MM-ddTHH:mm")">@Model.BookingSlotsInRange[i,j].ToString("dd-MM-yyyy HH:mm")</option>
+                            }
+                            else
+                            {
+                                <option disabled="disabled">@Model.BookingSlotsInRange[i,j].ToString("dd-MM-yyyy HH:mm")</option>
+                            }
+                        }
+                    </optgroup>
+                }
+            </select>
+        </label>
+        <input type="hidden" asp-for="Choices" />
+    </fieldset>
+    <fieldset>
+        <legend>Do you wish to continue with the order and pay @Model.Cost.ToString("C")?</legend>
+        <nav>
+            <a asp-page="Catalogue" asp-route-empty="false">No</a>
+            <button type="submit">Yes</button>
+        </nav>
+    </fieldset>
+
+</form>

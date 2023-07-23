@@ -153,7 +153,7 @@ main nav a {
 
 main form fieldset{
     width:90%;
-    margin:0 auto 3em auto;
+    margin:1em auto 3em auto;
     border:2px solid blue;
 }
 
@@ -349,13 +349,17 @@ main nav form {
 }
 
 main nav button {
-    width:100%;
     border:none;
     background:none;
 }
 
 main nav button:hover {
     text-decoration:underline;
+}
+
+main fieldset nav button{
+    display:inline-block;
+    width:50%;
 }
 
 @media (max-width:750px) {
