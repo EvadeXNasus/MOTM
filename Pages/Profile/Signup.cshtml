@@ -40,8 +40,8 @@
         </label>
         <samp asp-validation-for="Input.PhoneNumber"></samp>
         <label asp-for="Input.PhoneNumber">
-            Enter your phone number*
-            <input asp-for="Input.PhoneNumber" maxlength="15" required />
+            Enter your phone number without spaces, including the area code*
+            <input type="tel" asp-for="Input.PhoneNumber" placeholder="+440123456789" required pattern="[+][0-9]{12}" />
         </label>
         <samp asp-validation-for="Input.FirstAddressLine"></samp>
         <label asp-for="Input.FirstAddressLine">

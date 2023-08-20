@@ -3,10 +3,12 @@
 @{
     ViewData["Title"] = "All Orders";
 }
+<nav>
+    <a asp-page="UnpaidOrders">View Unpaid Orders</a>
+    <a asp-page="PendingOrders">View Pending Orders</a>
+</nav>
 
 <h1>All Orders</h1>
-
-<a asp-page="PendingOrders">View Pending Orders</a>
 
 <form method="POST">
     <fieldset>
@@ -36,21 +38,28 @@
         <caption>All Orders</caption>
         <thead>
             <tr>
-                <th>Name</th>
+                <th>Contact Details</th>
                 <th>Address</th>
                 <th>Services</th>
-                <th>Contact Details</th>
                 <th>Time</th>
-                <th>Fulfilled</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var Order in Model.CustomersOrders)
-        
+            @foreach (CustomerOrder Order in Model.CustomersOrders)
             {
                 <tr>
-                    <td>@(Order.FirstName + " " + Order.LastName)</td>
+                    <td>
+                        <dl>
+                            <dt>Name:</dt>
+                            <dd>@(Order.FirstName + " " + Order.LastName)</dd>
+                            <dt>E-Mail:</dt>
+                            <dd>@Order.EMail</dd>
+                            <dt>Phone Number:</dt>
+                            <dd>@Order.PhoneNumber</dd>
+                        </dl>
+                    </td>
                     <td>
                         <ul>
                             <li>@Order.FirstAddressLine</li>
@@ -68,7 +77,7 @@
                     </td>
                     <td>
                         <ul>
-                            @foreach (var Service in Model.Services)
+                            @foreach (Service Service in Model.Services)
                             {
                                 if (Order.Services % Service.ID == 0)
                                 {
@@ -79,14 +88,6 @@
                     </td>
                     <td>
                         <dl>
-                            <dt>E-Mail:</dt>
-                            <dd>@Order.EMail</dd>
-                            <dt>Phone Number:</dt>
-                            <dd>@Order.PhoneNumber</dd>
-                        </dl>
-                    </td>
-                    <td>
-                        <dl>
                             <dt>Ordered Time:</dt>
                             <dd>@Order.OrderedTime.ToString("dd-MM-yyyy HH:mm")</dd>
                             <dt>Time Slot:</dt>
@@ -94,10 +95,30 @@
                         </dl>
                     </td>
                     <td>
-                        @(Order.Fulfilled ? "Yes" : "No")
+                        <dl>
+                            <dt>Fulfilment:</dt>
+                            <dd>@(Order.Fulfilled ? "Fulfilled" : "Unfulfilled")</dd>
+                            <dt>Payment:</dt>
+                            <dd>@(Order.Paid ? "Confirmed" : "Unconfirmed")</dd>
+                        </dl>
                     </td>
                     <td>
-                        <button type="submit" asp-page-handler="Incomplete" asp-route-CustomerId="@Order.CustomerId" asp-route-OrderedTime="@Order.TimeSlot.ToString()" >Set to Unfunfilled</button>
+                        @if (Order.Fulfilled)
+                        {
+                            <button type="submit" asp-page-handler="UndoFulfilment" asp-route-CustomerId="@Order.CustomerId" asp-route-OrderedTime="@Order.TimeSlot.ToString()">Set to Unfunfilled</button>
+                        }
+                        else
+                        {
+                            <button type="submit" asp-page-handler="Fulfil" asp-route-CustomerId="@Order.CustomerId" asp-route-OrderedTime="@Order.TimeSlot.ToString()">Set to Fulfilled</button>
+                        }
+                        @if (Order.Paid)
+                        {
+                            <button type="submit" asp-page-handler="UndoPaymentConfirmation" asp-route-CustomerId="@Order.CustomerId" asp-route-OrderedTime="@Order.TimeSlot.ToString()" >Set to Unpaid</button>
+                        }
+                        else
+                        {
+                            <button type="submit" asp-page-handler="ConfirmPayment" asp-route-CustomerId="@Order.CustomerId" asp-route-OrderedTime="@Order.TimeSlot.ToString()">Set to Paid</button>
+                        }
                         <button type="submit" asp-page-handler="Delete" asp-route-CustomerId="@Order.CustomerId" asp-route-OrderedTime="@Order.TimeSlot.ToString()" >Erase Order</button>
                     </td>
                 </tr>

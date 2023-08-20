@@ -9,7 +9,7 @@
 <form method="POST">
     <fieldset>
         <legend>Details you can't change:</legend>
-        <input type="hidden" asp-for="Customer.Id" value="@Model.Customer.Id">
+        <input type="hidden" readonly="readonly" asp-for="Customer.Id" value="@Model.Customer.Id">
         <label>
             Your E-Mail:
             <input type="email" asp-for="Customer.EMail" value="@Model.Customer.EMail" readonly />
@@ -27,7 +27,7 @@
         <legend>Update Your Contact Details:</legend>
         <label>
             Your Phone Number:
-            <input type="tel" asp-for="Customer.PhoneNumber" value="@Model.Customer.PhoneNumber" maxlength="15" required />
+            <input type="tel" asp-for="Customer.PhoneNumber" value="@Model.Customer.PhoneNumber" placeholder="+440123456789" required pattern="[+][0-9]{12}" />
         </label>
         <label>
             Your First Line of Address:

@@ -33,9 +33,9 @@ namespace MOTM.Pages
             {
                 await _db.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException e)
+            catch (DbUpdateConcurrencyException ex)
             {
-                throw new Exception($"Profile could not be updated ", e);
+                throw new Exception($"Profile could not be updated ", ex);
             }
             return RedirectToPage("ProfileOverview");
         }

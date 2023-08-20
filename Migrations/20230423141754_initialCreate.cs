@@ -81,10 +81,12 @@ namespace MOTM.Migrations
                 columns: table => new
                 {
                     ID = table.Column<byte>(type: "tinyint", nullable: false),
+                    SortID = table.Column<byte>(type: "tinyint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Price = table.Column<short>(type: "smallint", nullable: false),
-                    Duration = table.Column<byte>(type: "tinyint", nullable: false)
+                    Duration = table.Column<byte>(type: "tinyint", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

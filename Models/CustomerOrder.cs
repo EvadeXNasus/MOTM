@@ -19,5 +19,6 @@ namespace MOTM.Models
         public DateTime OrderedTime { get; set; }
         public DateTime TimeSlot { get; set; }
         public bool Fulfilled { get; set; }
+        public bool Paid { get; set; }
     }
 }

@@ -14,43 +14,53 @@ namespace MOTM.Pages
         private MOTMContext _db;
         private SignInManager<AppUser> _signInManager;
         public IList<Service> Services { get; set; }
-        public byte i = 0;
-        public bool _empty;
-        public long sum = 1;
+        public bool Empty;
+        public bool Overloaded;
+        public long Choices = 1;
+        public short Duration = 0;
         [BindProperty]
-        public bool[] Selected { get; set; } = new bool[13];
+        public bool[] Selected { get; set; }
         public CatalogueModel(MOTMContext db, SignInManager<AppUser> sm)
         {
             _db = db;
             _signInManager = sm;
         }
 
-        public void OnGet(bool empty)
+        public void OnGet(string Handler)
         {
-            Services = _db.Services.FromSqlRaw("SELECT * FROM Services").ToList();
-            _empty = empty;
+            Services = _db.Services.FromSqlRaw("SELECT * FROM Services WHERE Active = 1 ORDER BY SortID").ToList();
+            Selected = new bool[Services.Count];
+            Empty = bool.Parse(Handler.Split(";")[0]);
+            Overloaded = bool.Parse(Handler.Split(";")[1]);
         }
 
-        public IActionResult OnPost(long sum)
+        public IActionResult OnPost(long Choices)
         {
             if (!_signInManager.IsSignedIn(User))
             {
                 return RedirectToPage("Login");
             }
-            Services = _db.Services.FromSqlRaw("SELECT * FROM Services").ToList();
+            Services = _db.Services.FromSqlRaw("SELECT * FROM Services WHERE Active = 1 ORDER BY SortID").ToList();
             for (int j = 0; j < Selected.Length; j++)
             {
                 if (Selected[j])
                 {
-                    sum *= Services[j].ID;
+                    Choices *= Services[j].ID;
+                    Duration += Services[j].Duration;
                 }
             }
-            if (sum == 1)
+            if (Choices == 1)
             {
-                _empty = true;
-                return RedirectToPage("Catalogue", new {empty = _empty});
+                Empty = true;
+                return RedirectToPage("Catalogue", Empty.ToString() + ";False");
             }
-            return RedirectToPage("OrderSummary", new {sum});
+            if (Duration > 120)
+            {
+                Overloaded = true;
+                return RedirectToPage("Catalogue", "False;" + Overloaded.ToString());
+            }
+            string Handler = Choices.ToString() + ";False";
+            return RedirectToPage("OrderSummary", Handler);
         }
     }
 }

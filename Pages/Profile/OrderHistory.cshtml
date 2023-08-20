@@ -4,17 +4,19 @@
     ViewData["Title"] = "Your Order History";
 }
 
-<h1>Order History</h1>
+<h1>Your Order History</h1>
 
 <form method="POST">
     <fieldset>
-        <legend>Search by Scheduled Month of Visit:</legend>
-        <input type="month" asp-for="SearchMonth" />
-        <button type="submit" asp-page-handler="Search">Search</button>
+        <legend>Filter by Scheduled Month of Visit:</legend>
+        <label asp-for="SearchMonth">
+            <input type="month" asp-for="SearchMonth" />
+        </label>
+        <button type="submit" asp-page-handler="Search">Filter</button>
     </fieldset>
 </form>
 
-@if (Model._Searched)
+@if (Model.Searched)
 {
     <a asp-page="OrderHistory" asp-page-Searched="false">View all Results</a>
 }
@@ -24,21 +26,21 @@
     <thead>
         <tr>
             <th>Price</th>
-            <th>Time Slot</th>
-            <th>Order Placed</th>
-            <th>Fulfilled</th>
+            <th>Services</th>
+            <th>Time</th>
+            <th>Status</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var Order in Model.Orders)
+        @foreach (Order Order in Model.Orders)
         {
             <tr>
                 <td>
-                    @foreach (var service in Model.Services)
+                    @foreach (Service Service in Model.Services)
                     {
-                        if (Order.Services % service.ID == 0)
+                        if (Order.Services % Service.ID == 0)
                         {
-                            Model.Cost += service.Price;
+                            Model.Cost += Service.Price;
                         }
                     }
                     @Model.Cost.ToString("C")
@@ -46,16 +48,33 @@
                         Model.Cost = 0;
                     }
                 </td>
-                <td>@Order.TimeSlot.ToString("yyyy-MM-dd HH:mm")</td>
-                <td>@Order.OrderedTime.ToString("yyyy-MM-dd HH:mm")</td>
-                @if (Order.Fulfilled)
-                {
-                    <td>Yes</td>
-                }
-                else
-                {
-                    <td>No</td>
-                }
+                <td>
+                    <ul>
+                        @foreach (Service Service in Model.Services)
+                        {
+                            if (Order.Services % Service.ID == 0)
+                            {
+                                <li>@Service.Name</li>
+                            }
+                        }
+                    </ul>
+                </td>
+                <td>
+                    <dl>
+                        <dt>Ordered Time:</dt>
+                        <dd>@Order.OrderedTime.ToString("dd-MM-yyyy HH:mm")</dd>
+                        <dt>Time Slot:</dt>
+                        <dd>@Order.TimeSlot.ToString("dd-MM-yyyy HH:mm")</dd>
+                    </dl>
+                </td>
+                <td>
+                    <dl>
+                        <dt>Fulfilment:</dt>
+                        <dd>@(Order.Fulfilled ? "Fulfilled" : "Unfulfilled")</dd>
+                        <dt>Payment:</dt>
+                        <dd>@(Order.Paid ? "Confirmed" : "Unconfirmed")</dd>
+                    </dl>
+                </td>
             </tr>
         }
     </tbody>

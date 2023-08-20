@@ -12,7 +12,7 @@
         <header>
             <nav>
                 <a asp-page="/Index">Home</a>
-                <a asp-page="/Catalogue" asp-route-empty="false">Catalogue</a>
+                <a asp-page="/Catalogue" asp-route-Handler="False;False">Catalogue</a>
                 <a asp-page="/About">About</a>
                 <a asp-page="/Contact">Contact</a>
                 @if (SignInManager.IsSignedIn(User))
@@ -28,7 +28,7 @@
             </nav>
         </header>
 
-        <main class="container">
+        <main>
             @RenderBody()
         </main>
 

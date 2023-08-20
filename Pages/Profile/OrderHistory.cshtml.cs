@@ -16,7 +16,7 @@ namespace MOTM.Pages
         public IList<Order> Orders { get; set; }
         public short Cost { get; set; } = 0;
         [BindProperty]
-        public bool _Searched { get; set; }
+        public bool Searched { get; set; }
         [BindProperty]
         public DateTime SearchMonth { get; set; } = DateTime.Now;
         public OrderHistoryModel (MOTMContext db, UserManager<AppUser> um)
@@ -26,7 +26,7 @@ namespace MOTM.Pages
         }
         public void OnGet(bool Searched)
         {
-            _Searched = Searched;
+            this.Searched = Searched;
             Services = _db.Services.FromSql($"SELECT * FROM Services").ToList();
             Orders = _db.Orders.FromSql($"SELECT * FROM Orders WHERE CustomerID = {_userManager.GetUserId(User)}" ).ToList();
         }
@@ -35,7 +35,7 @@ namespace MOTM.Pages
         {
             Services = _db.Services.FromSql($"SELECT * FROM Services").ToList();
             Orders = _db.Orders.FromSql($"SELECT * FROM Orders WHERE CustomerID = {_userManager.GetUserId(User)} AND TimeSlot LIKE '%' + {SearchMonth.ToString("yyyy-MM")} + '%'").ToList();
-            _Searched = true;
+            Searched = true;
             return Page();
         }
     }

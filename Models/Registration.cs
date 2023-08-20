@@ -10,7 +10,7 @@ namespace MOTM.Models
         [DataType(DataType.Password), Display(Name = "Confirm Password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match")]
         public string ConfirmPassword { get; set; }
-        [Required, StringLength(40)]
+        [Required, StringLength(40), EmailAddress]
         public string EMail { get; set; }
         [Required, StringLength(30)]
         public string FirstName { get; set; }

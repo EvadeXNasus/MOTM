@@ -1,32 +1,38 @@
 ﻿@page
 @model MOTM.Pages.ProfileOverviewModel
 @{
-    ViewData["Title"] = "Profile Overview";
+    ViewData["Title"] = !User.IsInRole("Admin") ? "Profile Overview" : "Admin Overview";
 }
-
-<h1> Profile Overview</h1>
 
 @if (!User.IsInRole("Admin"))
 {
+    <nav>
+        <a asp-page="OrderHistory">View Order History</a>
+        <a asp-page="ContactDetails">Edit Contact Details</a>
+    </nav>
+    
+    <h1> Profile Overview</h1>
+
     <table>
         <caption>Your Pending Orders:</caption>
         <thead>
             <tr>
                 <th>Price</th>
-                <th>Time Slot</th>
-                <th>Order Placed</th>
+                <th>Services</th>
+                <th>Time</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var Order in Model.PendingOrders)
+            @foreach (Order Order in Model.PendingOrders)
             {
                 <tr>
                     <td>
-                        @foreach (var service in Model.Services)
+                        @foreach (Service Service in Model.Services)
                         {
-                            if (Order.Services % service.ID == 0)
+                            if (Order.Services % Service.ID == 0)
                             {
-                                Model.Cost += service.Price;
+                                Model.Cost += Service.Price;
                             }
                         }
                         @Model.Cost.ToString("C")
@@ -34,69 +40,90 @@
                             Model.Cost = 0;
                         }
                     </td>
-                    <td>@Order.TimeSlot.ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>@Order.OrderedTime.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>
+                        <ul>
+                        @foreach (Service Service in Model.Services)
+                        {
+                            if (Order.Services % Service.ID == 0)
+                            {
+                                <li>@Service.Name</li>
+                            }
+                        }
+                        </ul>
+                    </td>
+                    <td>
+                        <dl>
+                            <dt>Ordered Time:</dt>
+                            <dd>@Order.OrderedTime.ToString("dd-MM-yyyy HH:mm")</dd>
+                            <dt>Time Slot:</dt>
+                            <dd>@Order.TimeSlot.ToString("dd-MM-yyyy HH:mm")</dd>
+                        </dl>
+                    </td>
+                    <td>
+                        <dl>
+                            <dt>Payment:</dt>
+                            <dd>@(Order.Paid ? "Confirmed" : "Unconfirmed")</dd>
+                        </dl>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
+
+    <h2>Your Contact Details:</h2>
+
+    <dl>
+        <dt>Your E-Mail Address:</dt>
+        <dd>@Model.Customer.EMail</dd>
+
+        <dt>Your First Name:</dt>
+        <dd>@Model.Customer.FirstName</dd>
+
+        <dt>Your Last Name:</dt>
+        <dd>@Model.Customer.LastName</dd>
+
+        <dt>Your Phone Number:</dt>
+        <dd>@Model.Customer.PhoneNumber</dd>
+
+        <dt>Your First Line of Address:</dt>
+        <dd>@Model.Customer.FirstAddressLine</dd>
+
+        <dt>Your Second Line of Address:</dt>
+        @if (Model.Customer.SecondAddressLine == null)
+        {
+            <dd><samp>You don't have a second line of address</samp></dd>
+        }
+        else
+        {
+            <dd>@Model.Customer.SecondAddressLine</dd>
+        }
+        <dt>Your Third Line of Address:</dt>
+
+        @if (Model.Customer.ThirdAddressLine == null)
+        {
+            <dd><samp>You don't have a third line of address</samp></dd>
+        }
+        else
+        {
+            <dd>@Model.Customer.ThirdAddressLine</dd>
+        }
+
+        <dt>Your Postal Town:</dt>
+        <dd>@Model.Customer.PostTown</dd>
+
+        <dt>Your Post Code:</dt>
+        <dd>@Model.Customer.PostCode</dd>
+    </dl>
 }
+
 else
 {
+    <h1>Admin Overview</h1>
+
     <nav>
         <a asp-page="/Profile/Admin/PendingOrders">View & Edit Pending Orders</a>
+        <a asp-page="/Profile/Admin/UnpaidOrders">View & Edit Unpaid Orders</a>
         <a asp-page="/Profile/Admin/AllOrders">View & Edit All Orders</a>
-    </nav>
-}
-
-<h2>Your Contact Details:</h2>
-
-<dl>
-    <dt>Your E-Mail Address:</dt>
-    <dd>@Model.Customer.EMail</dd>
-
-    <dt>Your First Name:</dt>
-    <dd>@Model.Customer.FirstName</dd>
-
-    <dt>Your Last Name:</dt>
-    <dd>@Model.Customer.LastName</dd>
-
-    <dt>Your Phone Number:</dt>
-    <dd>@Model.Customer.PhoneNumber</dd>
-
-    <dt>Your First Line of Address:</dt>
-    <dd>@Model.Customer.FirstAddressLine</dd>
-
-    <dt>Your Second Line of Address:</dt>
-    @if (Model.Customer.SecondAddressLine == null)
-    {
-        <dd><samp>You don't have a second line of address</samp></dd>
-    }
-    else
-    {
-        <dd>@Model.Customer.SecondAddressLine</dd>
-    }
-    <dt>Your Third Line of Address:</dt>
-
-    @if (Model.Customer.ThirdAddressLine == null)
-    {
-        <dd><samp>You don't have a third line of address</samp></dd>
-    }
-    else
-    {
-        <dd>@Model.Customer.ThirdAddressLine</dd>
-    }
-
-    <dt>Your Postal Town:</dt>
-    <dd>@Model.Customer.PostTown</dd>
-
-    <dt>Your Post Code:</dt>
-    <dd>@Model.Customer.PostCode</dd>
-</dl>
-@if (!User.IsInRole("Admin"))
-{
-    <nav>
-        <a asp-page="OrderHistory">View Order History</a>
-        <a asp-page="ContactDetails">Edit Contact Details</a>
+        <a asp-page="/Profile/Admin/Services">View & Edit Services</a>
     </nav>
 }

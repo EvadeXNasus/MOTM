@@ -1,0 +1,87 @@
+﻿@page
+@model MOTM.Pages.Profile.Admin.ServicesModel
+@{
+    ViewData["Title"] = "View & Edit Services";
+}
+
+<h1>View & Edit Services</h1>
+
+<form method="post">
+    <table>
+        <caption>Active Services</caption>
+        <thead>
+            <tr>
+                <th>IDs</th>
+                <th>Name, Price & Duration</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Service Service in Model.ActiveServices)
+            {
+                <tr>
+                    <td>
+                        <dl>
+                            <dt>Real ID:</dt>
+                            <dd>@Service.ID</dd>
+                            <dt>Sort ID:</dt>
+                            <dd>@Service.SortID</dd>
+                        </dl>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>@Service.Name</li>
+                            <li>@Service.Price.ToString("C")</li>
+                            <li>@Service.Duration min</li>
+                        </ul>
+                    </td>
+                    <td>@Service.Description</td>
+                    <td>
+                        <button type="submit" asp-page-handler="Deactivate" asp-route-ServiceID="@Service.ID">Set to Inactive</button>
+                        <a asp-page="/Profile/Admin/EditService" asp-route-ServiceID="@Service.ID">Edit Service</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <table>
+        <caption>Inactive Services</caption>
+        <thead>
+            <tr>
+                <th>IDs</th>
+                <th>Name, Price & Duration</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Service Service in Model.InactiveServices)
+            {
+                <tr>
+                    <td>
+                        <dl>
+                            <dt>Real ID:</dt>
+                            <dd>@Service.ID</dd>
+                            <dt>Sort ID:</dt>
+                            <dd>@Service.SortID</dd>
+                        </dl>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>@Service.Name</li>
+                            <li>@Service.Price.ToString("C")</li>
+                            <li>@Service.Duration min</li>
+                        </ul>
+                    </td>
+                    <td>@Service.Description</td>
+                    <td>
+                        <button type="submit" asp-page-handler="Activate" asp-route-ServiceID="@Service.ID">Set to Active</button>
+                        <a asp-page="/Profile/Admin/EditService" asp-route-ServiceID="@Service.ID">Edit Service</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>

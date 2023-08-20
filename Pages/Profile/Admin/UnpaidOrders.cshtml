@@ -1,15 +1,15 @@
 ﻿@page
-@model MOTM.Pages.Profile.Admin.PendingOrdersModel
+@model MOTM.Pages.Profile.Admin.UnpaidOrdersModel
 @{
-    ViewData["Title"] = "View Pending Orders";
+    ViewData["Title"] = "View Unpaid Orders";
 }
 
 <nav>
     <a asp-page="AllOrders">View All Orders</a>
-    <a asp-page="UnpaidOrders">View Unpaid Orders</a>
+    <a asp-page="PendingOrders">View Pending Orders</a>
 </nav>
 
-<h1>Pending Orders</h1>
+<h1>Unpaid Orders</h1>
 
 <form method="POST">
     <table>
@@ -88,7 +88,7 @@
                         }
                         else
                         {
-                            <button type="submit" asp-page-handler="UndoPaymentConfirmation" asp-route-CustomerID="@Order.CustomerId" asp-route-TimeSlot="@Order.TimeSlot.ToString()">Mark as Unpaid</button>                           
+                            <button type="submit" asp-page-handler="UndoPaymentConfirmation" asp-route-CustomerID="@Order.CustomerId" asp-route-TimeSlot="@Order.TimeSlot.ToString()">Mark as Unpaid</button>
                         }
                         <button type="submit" asp-page-handler="Delete" asp-route-CustomerId="@Order.CustomerId" asp-route-OrderedTime="@Order.TimeSlot.ToString()">Erase Order</button>
                     </td>

@@ -1,0 +1,48 @@
+﻿@page "{ServiceID}"
+@model MOTM.Pages.Profile.Admin.EditServiceModel
+@{
+    ViewData["Title"] = "Edit Service";
+}
+
+<form method="post">
+    <fieldset>
+        <legend>@Model.Service.Name</legend>
+        <input type="hidden" readonly="readonly" asp-for="@Model.Service.ID" value="@Model.Service.ID" />
+        <label asp-for="@Model.Service.SortID">
+            Sort ID
+            <input type="=number" asp-for="@Model.Service.SortID" value="@Model.Service.SortID" min="1" max="100"/>
+        </label>
+        <label asp-for="@Model.Service.Name">
+            Name:
+            <input asp-for="@Model.Service.Name" value="@Model.Service.Name" maxlength="50" />
+        </label>
+        <label asp-for="@Model.Service.Description">
+            Description:
+            <input asp-for="@Model.Service.Description" value="@Model.Service.Description" maxlength="300" />
+        </label>
+        <label asp-for="@Model.Service.Price">
+            Price:
+            <input type="number" asp-for="@Model.Service.Price" value="@Model.Service.Price" min="0" max="300"/>
+        </label>
+        <label asp-for="@Model.Service.Duration">
+            Duration:
+            <input type="number" asp-for="@Model.Service.Duration" value="@Model.Service.Duration" max="120" />
+        </label>
+        <label asp-for="@Model.Service.Active">
+            Status:
+            <select asp-for="@Model.Service.Active">
+                @if (Model.Service.Active)
+                {
+                    <option selected="selected" value="true">Active</option>
+                    <option value="false">Inactive</option>
+                }
+                else
+                {
+                    <option value="true">Active</option>
+                    <option selected="selected" value="false">Inactive</option>
+                }
+            </select>
+        </label>
+        <button type="submit" asp-page-handler="SaveChanges">Save Changes</button>
+    </fieldset>
+</form>

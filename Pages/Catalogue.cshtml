@@ -1,13 +1,17 @@
-﻿@page "{empty:bool}"
+﻿@page "{Handler}"
 @model MOTM.Pages.CatalogueModel
 @{
     ViewData["Title"] = "Catalogue";
 }
 
-@if (@Model._empty)
-    {
-        <samp>Please select at least one option.</samp><br />
-    }
+@if (Model.Empty)
+{
+    <samp>Please select at least one option.</samp><br />
+}
+@if (Model.Overloaded)
+{
+    <samp>Please ensure the total duration does not exceed 2 hours</samp><br />
+}
 <table>
     <caption>Services & Pricing</caption>
     <thead>
@@ -21,21 +25,21 @@
     </thead>
     <form method="POST">
         <tbody>
-            @foreach (var Ser in Model.Services) {
+            @for (int i = 0; i < Model.Services.Count; i++)
+            {
                 <tr>
-                    <td>@Ser.Name</td>
-                    <td>@Ser.Description</td>
-                    <td>@Ser.Duration min</td>
-                    <td>@Ser.Price.ToString("C")</td>
-                    <td><input type="checkbox" asp-for="Selected[Model.i]"/></td>
-                </tr>
-                Model.i++;
+                    <td>@Model.Services[i].Name</td>
+                    <td>@Model.Services[i].Description</td>
+                    <td>@Model.Services[i].Duration min</td>
+                    <td>@Model.Services[i].Price.ToString("C")</td>
+                    <td><input type="checkbox" asp-for="Selected[i]"/></td>
+                </tr>              
             }
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="5">
-                    <button type="submit" asp-route-sum="@Model.sum">Place Order</button>
+                    <button type="submit" asp-route-Choices="@Model.Choices">Place Order</button>
                 </td>
             </tr>
         </tfoot>

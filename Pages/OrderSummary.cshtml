@@ -1,4 +1,4 @@
-﻿@page "{sum:long}"
+﻿@page "{Handler}"
 @model MOTM.Pages.OrderSummaryModel
 @{
     ViewData["Title"] = "Order Summary";
@@ -6,44 +6,68 @@
 
 <h1>You have made the following selections:</h1>
 <ul>
-    @foreach (var service in Model.Services)
+    @foreach (Service Service in Model.Services)
     {
-        if (Model.Choices % service.ID == 0)
+        if (Model.Choices % Service.ID == 0)
         {
-            <li>@service.Name</li>
+            <li>@Service.Name</li>
         }
     }
 </ul>
+
+@if (Model.Tomfoolery)
+{
+    <samp>What are you doing...?</samp>
+}
+
+@if(Model.Snagged)
+{
+    <samp>Somebody just snagged that time slot! Just needs rebooked...</samp>
+}
+
 <form method="POST">
     <fieldset>
         <legend>Choose the date & time within four weeks and no earlier than one week:</legend>
+        <input type="hidden" asp-for="Tomfoolery" value="@Model.Tomfoolery" />
         <label asp-for="Input">
             Select a Date:
             <select asp-for="Input">
-                @for (byte i = 0; i < 21; i++)
+                @for (byte i = 0; i < Model.BookingDaysInRange.Length; i++)
                 {
-                    <optgroup label="@Model.BookingSlotsInRange[i,0].ToString("dd-MM-yyyy")">
-                        @for (byte j = 0; j < 5; j++)
-                        {
-                            if (!Model.OrdersInBookableRange.Any(Order => Order.TimeSlot == Model.BookingSlotsInRange[i, j]))
+                    if (Model.BookingDaysInRange[i].Overbooked())
+                    {
+                        <optgroup disabled="disabled" label="@Model.BookingDaysInRange[i].TimeSlots[0].ToString("dd-MM-yyyy")">
+                            @for (byte j = 0; j < Model.BookingDaysInRange[i].SlotsAreBooked.Length; j++)
                             {
-                                <option value="@Model.BookingSlotsInRange[i,j].ToString("yyyy-MM-ddTHH:mm")">@Model.BookingSlotsInRange[i,j].ToString("dd-MM-yyyy HH:mm")</option>
+                                <option disabled="disabled">@Model.BookingDaysInRange[i].TimeSlots[j].ToString("dd-MM-yyyy HH:mm")</option>
                             }
-                            else
+                        </optgroup>
+                    }
+                    else
+                    {
+                        <optgroup label="@Model.BookingDaysInRange[i].TimeSlots[0].ToString("dd-MM-yyyy")">
+                            @for (byte j = 0; j < Model.BookingDaysInRange[i].SlotsAreBooked.Length; j++)
                             {
-                                <option disabled="disabled">@Model.BookingSlotsInRange[i,j].ToString("dd-MM-yyyy HH:mm")</option>
+                                if (!@Model.BookingDaysInRange[i].SlotsAreBooked[j])
+                                {
+                                    <option value="@Model.BookingDaysInRange[i].TimeSlots[j].ToString("yyyy-MM-ddTHH:mm")">@Model.BookingDaysInRange[i].TimeSlots[j].ToString("dd-MM-yyyy HH:mm")</option>
+                                }
+                                else
+                                {
+                                    <option disabled="disabled">@Model.BookingDaysInRange[i].TimeSlots[j].ToString("dd-MM-yyyy HH:mm")</option>
+                                }
                             }
-                        }
-                    </optgroup>
+                        </optgroup>                        
+                    }
                 }
             </select>
         </label>
         <input type="hidden" asp-for="Choices" />
     </fieldset>
     <fieldset>
-        <legend>Do you wish to continue with the order and pay @Model.Cost.ToString("C")?</legend>
+        <legend>Do you wish to continue with the order and commit to paying @Model.Cost.ToString("C")?</legend>
         <nav>
-            <a asp-page="Catalogue" asp-route-empty="false">No</a>
+            <a asp-page="Catalogue" asp-route-Handler="False;False">No</a>
             <button type="submit">Yes</button>
         </nav>
     </fieldset>

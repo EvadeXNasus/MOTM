@@ -29,7 +29,7 @@ namespace MOTM.Pages.Profile.Admin
             CustomersOrders = _db.CustomersOrders.FromSql(
                 $@"SELECT
                 Id AS CustomerId, FirstName, LastName, FirstAddressLine, SecondAddressLine, ThirdAddressLine, PostTown, PostCode, EMail, PhoneNumber,
-                Services, OrderedTime, TimeSlot, Fulfilled 
+                Services, OrderedTime, TimeSlot, Fulfilled, Paid
                 FROM Orders INNER JOIN Customers ON Orders.CustomerID = Customers.Id"
                 ).ToList();
         }
@@ -48,7 +48,7 @@ namespace MOTM.Pages.Profile.Admin
             CustomersOrders = _db.CustomersOrders.FromSql(
                 $@"SELECT
                 Id AS CustomerId, FirstName, LastName, FirstAddressLine, SecondAddressLine, ThirdAddressLine, PostTown, PostCode, EMail, PhoneNumber, 
-                Services, OrderedTime, TimeSlot, Fulfilled 
+                Services, OrderedTime, TimeSlot, Fulfilled, Paid
                 FROM Orders INNER JOIN Customers ON Orders.CustomerID = Customers.Id 
                 WHERE FirstName LIKE '%' + {Input.FirstName} + '%' AND LastName LIKE '%' + {Input.LastName} + '%'
                 AND OrderedTime LIKE '%' + {pOrderedMonth} + '%' AND TimeSlot LIKE '%' + {pBookedMonth} + '%'"
@@ -56,11 +56,62 @@ namespace MOTM.Pages.Profile.Admin
             return Page();
         }
 
-        public async Task<IActionResult> OnPostIncompleteAsync(string CustomerId, string OrderedTime)
+        public async Task<IActionResult> OnPostFulfilAsync(string CustomerId, string OrderedTime)
         {
             DateTime TimeSlot = DateTime.Parse(OrderedTime);
-            var Order = await _db.Orders.FindAsync(CustomerId, TimeSlot);
+            Order Order = await _db.Orders.FindAsync(CustomerId, TimeSlot);
+            Order.Fulfilled = true;
+            _db.Attach(Order).State = EntityState.Modified;
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                throw new Exception($"Order could not be updated", e);
+            }
+            return RedirectToPage("/Profile/Admin/AllOrders");
+        }
+
+        public async Task<IActionResult> OnPostUndoFulfilmentAsync(string CustomerId, string OrderedTime)
+        {
+            DateTime TimeSlot = DateTime.Parse(OrderedTime);
+            Order Order = await _db.Orders.FindAsync(CustomerId, TimeSlot);
             Order.Fulfilled = false;
+            _db.Attach(Order).State = EntityState.Modified;
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                throw new Exception($"Order could not be updated", e);
+            }
+            return RedirectToPage("/Profile/Admin/AllOrders");
+        }
+
+        public async Task<IActionResult> OnPostConfirmPaymentAsync(string CustomerId, string OrderedTime)
+        {
+            DateTime TimeSlot = DateTime.Parse(OrderedTime);
+            Order Order = await _db.Orders.FindAsync(CustomerId, TimeSlot);
+            Order.Paid = true;
+            _db.Attach(Order).State = EntityState.Modified;
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                throw new Exception($"Order could not be updated", e);
+            }
+            return RedirectToPage("/Profile/Admin/AllOrders");
+        }
+
+        public async Task<IActionResult> OnPostUndoPaymentConfirmationAsync(string CustomerId, string OrderedTime)
+        {
+            DateTime TimeSlot = DateTime.Parse(OrderedTime);
+            Order Order = await _db.Orders.FindAsync(CustomerId, TimeSlot);
+            Order.Paid = false;
             _db.Attach(Order).State = EntityState.Modified;
             try
             {
@@ -76,7 +127,7 @@ namespace MOTM.Pages.Profile.Admin
         public async Task<IActionResult> OnPostDeleteAsync(string CustomerId, string OrderedTime)
         {
             DateTime TimeSlot = DateTime.Parse(OrderedTime);
-            var Order = await _db.Orders.FindAsync(CustomerId, TimeSlot);
+            Order Order = await _db.Orders.FindAsync(CustomerId, TimeSlot);
             _db.Remove<Order>(Order).State = EntityState.Deleted;
             try
             {

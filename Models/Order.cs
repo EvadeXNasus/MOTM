@@ -14,5 +14,7 @@ namespace MOTM.Models
         public DateTime OrderedTime { get; set; }
         [Required]
         public bool Fulfilled { get; set; }
+        [Required]
+        public bool Paid { get; set; }
     }
 }

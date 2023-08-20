@@ -6,7 +6,7 @@ namespace MOTM.Models
     {
         [Key, StringLength(450)]
         public string Id { get; set; }
-        [Required,StringLength(40)]
+        [Required,StringLength(40), EmailAddress]
         public string EMail { get; set; }
         [Required,StringLength(30)]
         public string FirstName { get; set; }
